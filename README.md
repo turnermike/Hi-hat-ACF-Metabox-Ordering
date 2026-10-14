@@ -1,5 +1,8 @@
 # Hi-hat ACF Metabox Ordering
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![WordPress Plugin: Tested up to 6.7](https://img.shields.io/badge/WordPress%20Plugin-Tested%20up%20to%206.7-blue.svg)](https://wordpress.org/plugins/)
+
 A WordPress plugin that applies a global ACF metabox ordering set by the site administrator to all users.
 
 ## Description
@@ -18,10 +21,28 @@ This plugin solves that problem by capturing the admin's preferred metabox order
 
 ## Installation
 
-1. Upload the `hi-hat-acf-metabox-ordering` folder to `/wp-content/plugins/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to **Tools → Metabox Ordering** and check which post types should use global ordering
-4. Log in as an administrator and rearrange ACF metaboxes as desired—the order will be captured automatically
+### From WordPress.org Plugin Repository
+
+1. Go to **Plugins → Add New** in your WordPress admin
+2. Search for "Hi-hat ACF Metabox Ordering"
+3. Click **Install Now** and then **Activate**
+
+### Manual Installation
+
+1. Download the latest release from [GitHub Releases](https://github.com/miketurner/hi-hat-acf-metabox-ordering/releases)
+2. Extract the ZIP file and upload the `hi-hat-acf-metabox-ordering` folder to `/wp-content/plugins/`
+3. Activate the plugin through the **Plugins** menu in WordPress
+4. Go to **Tools → Metabox Ordering** and select which post types should use global ordering
+5. As an administrator, arrange ACF metaboxes as desired—the order is automatically captured
+
+### From Source (Development)
+
+```bash
+git clone https://github.com/miketurner/hi-hat-acf-metabox-ordering.git
+cd hi-hat-acf-metabox-ordering
+composer install  # if using vendor dependencies
+npm install       # if using build tools
+```
 
 ## Configuration
 
@@ -92,11 +113,47 @@ In multisite networks, each site maintains separate settings and metabox orders.
 
 ## Support
 
-For issues or feature requests, please contact the Hi-hat Consulting development team.
+For issues or feature requests, please:
+
+- **Report Issues**: [GitHub Issues](https://github.com/miketurner/hi-hat-acf-metabox-ordering/issues)
+- **Contact Support**: [Hi-hat Consulting](https://hi-hatconsulting.com)
+- **Submit PRs**: Contributions are welcome! Please create a pull request with your changes
 
 ## License
 
-This plugin is licensed under the GPL v2 or later.
+This plugin is licensed under the GPL v2 or later. See [LICENSE](./LICENSE) for details.
+
+## Contributing
+
+We welcome contributions! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Setup
+
+```bash
+# Install dependencies
+composer install
+npm install
+
+# Run tests
+npm run test
+
+# Build distribution
+./build.sh
+```
+
+## Credits
+
+**Author:** Mike Turner - [Hi-hat Consulting](https://hi-hatconsulting.com)
+
+---
+
+**Made with ❤️ for WordPress developers**
 
 ## Changelog
 

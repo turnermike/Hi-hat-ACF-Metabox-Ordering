@@ -182,13 +182,14 @@ class Settings {
 	 * @return void
 	 */
 	public function display_notices() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		// Check if we're on the settings page.
-		if ( ! isset( $_GET['page'] ) || 'hihat-metabox-ordering' !== $_GET['page'] ) {
+		if ( ! isset( $_GET['page'] ) || 'hihat-metabox-ordering' !== sanitize_key( $_GET['page'] ) ) {
 			return;
 		}
 
-		// Check if settings were saved.
-		if ( isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated'] ) {
+		// Check if settings were saved by the Settings API.
+		if ( isset( $_GET['settings-updated'] ) && 'true' === sanitize_key( $_GET['settings-updated'] ) ) {
 			?>
 			<div class="notice notice-success is-dismissible">
 				<p>
@@ -197,6 +198,7 @@ class Settings {
 			</div>
 			<?php
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
