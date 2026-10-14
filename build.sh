@@ -67,6 +67,13 @@ echo -e "${YELLOW}Building distribution for: ${GREEN}${PLUGIN_SLUG}${NC}"
 # Create dist directory if it doesn't exist
 DIST_DIR="${SCRIPT_DIR}/dist"
 ZIP_FILE="${DIST_DIR}/${PLUGIN_SLUG}.zip"
+
+# Completely clear the dist directory before building
+if [[ -d "${DIST_DIR}" ]]; then
+    echo -e "${YELLOW}Clearing previous builds...${NC}"
+    rm -rf "${DIST_DIR}"
+fi
+
 mkdir -p "${DIST_DIR}"
 
 # Create temp directory for build (automatically cleaned up on exit via trap)
