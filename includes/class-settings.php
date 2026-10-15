@@ -211,8 +211,19 @@ class Settings {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'hi-hat-acf-metabox-ordering' ) );
 		}
 
+		// Get banner image URL
+		$banner_url = plugins_url( 'assets/banner-772x250.png', PLUGIN_DIR . '/hihat-acf-metabox-ordering.php' );
+
 		?>
 		<div class="wrap">
+			<div style="margin: 20px 0;">
+				<img 
+					src="<?php echo esc_url( $banner_url ); ?>" 
+					alt="<?php esc_attr_e( 'Hi-hat ACF Metabox Ordering', 'hi-hat-acf-metabox-ordering' ); ?>"
+					style="max-width: 100%; height: auto; display: block;"
+				/>
+			</div>
+
 			<h1><?php esc_html_e( 'Metabox Ordering Settings', 'hi-hat-acf-metabox-ordering' ); ?></h1>
 
 			<form method="post" action="options.php">
