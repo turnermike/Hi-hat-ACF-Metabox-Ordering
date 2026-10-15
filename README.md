@@ -5,6 +5,8 @@
 
 A WordPress plugin that applies a global ACF metabox ordering set by the site administrator to all users.
 
+Works on both **standard WordPress** installations and **WordPress Multisite** networks.
+
 ## Description
 
 By default, WordPress stores metabox ordering per-user. This means if an admin rearranges ACF field group meta boxes on a page, other users won't see that order—each user has their own independent arrangement.
@@ -93,7 +95,7 @@ A: No. For post types with global ordering enabled, all users see the admin-set 
 A: Simply log in as an admin, rearrange the metaboxes on an enabled post type, and the new order will be captured and applied to all users.
 
 ### Q: Does this work with multisite?
-A: Yes! The plugin works perfectly with WordPress multisite. Each site maintains its own post type settings and metabox orders.
+A: Yes! The plugin works perfectly with both **standard WordPress** installations and **WordPress Multisite** networks. Each site maintains its own post type settings and metabox orders. Changes on one site don't affect others.
 
 ### Q: Can I reset the plugin to default behavior?
 A: Deactivate the plugin in **Tools → Metabox Ordering** (uncheck all post types), or delete it entirely to restore per-user metabox ordering.

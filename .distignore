@@ -21,6 +21,7 @@ bin
 .vscode
 .idea
 _ai-agent-notes
+_dev-assets
 build.sh
 dist
 *.log

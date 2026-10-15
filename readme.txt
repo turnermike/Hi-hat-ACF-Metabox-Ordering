@@ -8,7 +8,7 @@ Stable tag: 1.0.0
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Enforce a consistent ACF field order across your entire site — set it once as an admin, and it applies to every user, on the post types you choose.
+Set a global ACF metabox order for your site. Admin configures it once, all users see the same order on enabled post types.
 
 == Description ==
 
@@ -42,6 +42,10 @@ After activation, navigate to **Tools → Metabox Ordering** to:
 
 Only administrators can access this settings page.
 
+== Screenshots ==
+
+1. Settings page — Select which post types should enforce global ACF metabox ordering for all users
+
 == Frequently Asked Questions ==
 
 = Who can SET the global metabox order? =
@@ -71,7 +75,7 @@ Simply log in as an admin, rearrange the metaboxes on an enabled post type, and 
 
 = Does this work with multisite? =
 
-Yes! The plugin works perfectly with WordPress multisite. Each site maintains its own post type settings and metabox orders.
+Yes! The plugin works perfectly with both **standard WordPress** installations and **WordPress Multisite** networks. Each site maintains its own post type settings and metabox orders. Changes on one site don't affect others.
 
 = Can I reset the plugin to default behavior? =
 

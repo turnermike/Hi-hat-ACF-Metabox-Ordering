@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Hi-hat ACF Metabox Ordering
- * Plugin URI: https://hi-hatconsulting.com/
+ * Plugin URI: https://github.com/turnermike/Hi-hat-ACF-Metabox-Ordering
  * Description: Enforce a consistent ACF field order across your entire site — set it once as an admin, and it applies to every user, on the post types you choose.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Mike Turner - Hi-hat Consulting
  * Author URI: https://hi-hatconsulting.com
  * License: GPL v2 or later
@@ -16,6 +16,7 @@
  *
  * @package HihatAcfMetaboxOrdering
  */
+
 
 namespace HihatAcfMetaboxOrdering;
 
