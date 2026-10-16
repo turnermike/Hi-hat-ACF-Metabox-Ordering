@@ -1,7 +1,7 @@
 # Hi-hat ACF Metabox Ordering
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![WordPress Plugin: Tested up to 6.7](https://img.shields.io/badge/WordPress%20Plugin-Tested%20up%20to%206.7-blue.svg)](https://wordpress.org/plugins/)
+[![WordPress Plugin: Tested up to 7.1](https://img.shields.io/badge/WordPress%20Plugin-Tested%20up%20to%207.1-blue.svg)](https://wordpress.org/plugins/)
 
 A WordPress plugin that applies a global ACF metabox ordering set by the site administrator to all users.
 
