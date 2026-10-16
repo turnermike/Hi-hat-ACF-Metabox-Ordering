@@ -87,7 +87,19 @@ Deactivate the plugin in **Tools → Metabox Ordering** (uncheck all post types)
 * Advanced Custom Fields (ACF) Pro or Free version
 * PHP 7.2+
 
+== Requirements ==
+
+* WordPress 5.0+
+* Advanced Custom Fields (ACF) Pro or Free version
+* PHP 7.2+
+
 == Changelog ==
+
+= 1.1.0 =
+* Added dependency check for ACF plugin
+* Plugin now displays admin notice if ACF is not installed/activated
+* Plugin automatically deactivates if ACF is not found
+* Improved error handling and user feedback
 
 = 1.0.0 =
 * Initial release

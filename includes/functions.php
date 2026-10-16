@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array Array of post type names.
  */
 function get_enabled_post_types() {
-	$options = get_option( OPTION_KEY_SETTINGS, [] );
+	$options = get_option( HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS, [] );
 
 	if ( empty( $options ) ) {
 		return [];

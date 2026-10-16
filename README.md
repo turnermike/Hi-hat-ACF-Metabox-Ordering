@@ -65,9 +65,11 @@ Only administrators can access this settings page.
 
 ## Requirements
 
-- WordPress 5.0+
-- Advanced Custom Fields (ACF) Pro or Free version
-- PHP 7.2+
+- **WordPress 5.0+**
+- **Advanced Custom Fields (ACF) Pro or Free version** ⚠️ **Required**
+- **PHP 7.2+**
+
+> **Note:** This plugin requires Advanced Custom Fields to function. If ACF is not installed or activated, the plugin will automatically deactivate and display an admin notice with instructions to install ACF.
 
 ## Frequently Asked Questions
 

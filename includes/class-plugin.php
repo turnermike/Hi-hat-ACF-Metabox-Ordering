@@ -62,8 +62,8 @@ class Plugin {
 	 * @return void
 	 */
 	private function load_classes() {
-		require_once PLUGIN_DIR . '/includes/class-metabox-order-handler.php';
-		require_once PLUGIN_DIR . '/includes/class-settings.php';
+		require_once HIHAT_METABOX_ORDERING_DIR . '/includes/class-metabox-order-handler.php';
+		require_once HIHAT_METABOX_ORDERING_DIR . '/includes/class-settings.php';
 
 		$this->handler  = new Metabox_Order_Handler();
 		$this->settings = new Settings();

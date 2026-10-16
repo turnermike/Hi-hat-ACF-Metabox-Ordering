@@ -60,7 +60,7 @@ class Settings {
 		// For single site, we use regular options
 		register_setting(
 			$option_group,
-			OPTION_KEY_SETTINGS,
+			HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS,
 			[
 				'type'              => 'array',
 				'sanitize_callback' => [ $this, 'sanitize_settings' ],
@@ -137,14 +137,14 @@ class Settings {
 	 */
 	public function render_checkbox( $args ) {
 		$post_type = $args['post_type'];
-		$options   = get_option( OPTION_KEY_SETTINGS, [] );
+		$options   = get_option( HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS, [] );
 		$checked   = ! empty( $options[ $post_type ] );
 
 		?>
 		<input
 			type="checkbox"
 			id="hihat_metabox_ordering_<?php echo esc_attr( $post_type ); ?>"
-			name="<?php echo esc_attr( OPTION_KEY_SETTINGS ); ?>[<?php echo esc_attr( $post_type ); ?>]"
+			name="<?php echo esc_attr( HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS ); ?>[<?php echo esc_attr( $post_type ); ?>]"
 			value="1"
 			<?php checked( $checked ); ?>
 		/>
@@ -212,7 +212,7 @@ class Settings {
 		}
 
 		// Get banner image URL
-		$banner_url = plugins_url( 'assets/banner-772x250.png', PLUGIN_DIR . '/hihat-acf-metabox-ordering.php' );
+		$banner_url = plugins_url( 'assets/banner-772x250.png', HIHAT_METABOX_ORDERING_DIR . '/hihat-acf-metabox-ordering.php' );
 
 		?>
 		<div class="wrap">

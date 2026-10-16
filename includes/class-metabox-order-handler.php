@@ -51,7 +51,7 @@ class Metabox_Order_Handler {
 		}
 
 		// Get the current global order (per-site in multisite, global in single site).
-		$global_order = get_option( OPTION_KEY_ORDERS, [] );
+		$global_order = get_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ORDERS, [] );
 		if ( ! is_array( $global_order ) ) {
 			$global_order = [];
 		}
@@ -60,7 +60,7 @@ class Metabox_Order_Handler {
 		$global_order[ $meta_key ] = $meta_value;
 
 		// Save the updated global order (per-site in multisite, global in single site).
-		update_option( OPTION_KEY_ORDERS, $global_order );
+		update_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ORDERS, $global_order );
 
 		// Must return $null to allow WordPress to continue normally.
 		return $null;
@@ -99,7 +99,7 @@ class Metabox_Order_Handler {
 		}
 
 		// Get the globally stored metabox order (per-site in multisite, global in single site).
-		$global_order = get_option( OPTION_KEY_ORDERS, [] );
+		$global_order = get_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ORDERS, [] );
 
 		// If no global order exists, return null to let WordPress continue.
 		if ( empty( $global_order ) || ! is_array( $global_order ) ) {

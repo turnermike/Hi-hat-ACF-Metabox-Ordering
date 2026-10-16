@@ -13,25 +13,52 @@
  * Requires at least: 5.0
  * Requires PHP: 7.2
  * Network: true
+ * ACF: 5.0.0
  *
  * @package HihatAcfMetaboxOrdering
  */
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-namespace HihatAcfMetaboxOrdering;
+// Check for ACF dependency on admin_init.
+add_action( 'admin_init', function () {
+	if ( ! class_exists( 'acf' ) ) {
+		$plugin = plugin_basename( __FILE__ );
+		if ( is_plugin_active( $plugin ) ) {
+			deactivate_plugins( $plugin, true, is_plugin_active_for_network( $plugin ) );
+			// Suppress WordPress's activation success notice after deactivating.
+			unset( $_GET['activate'], $_GET['activated'] );
+		}
+	}
+} );
 
-defined( 'ABSPATH' ) || exit;
+// Display admin notice if ACF is not installed/activated.
+add_action( 'all_admin_notices', function () {
+	if ( ! class_exists( 'acf' ) ) {
+		echo '<div class="notice notice-warning"><p>';
+		esc_html_e( 'Hi-hat ACF Metabox Ordering has been deactivated because it requires Advanced Custom Fields. Install and activate Advanced Custom Fields, then activate Hi-hat ACF Metabox Ordering again.', 'hi-hat-acf-metabox-ordering' );
+		echo '</p></div>';
+	}
+} );
 
-const PLUGIN_DIR = __DIR__;
-const OPTION_KEY_SETTINGS = 'hihat_enabled_post_types';
-const OPTION_KEY_ORDERS = 'hihat_acf_metabox_order';
+// Only load plugin if ACF is active.
+if ( ! class_exists( 'acf' ) ) {
+	return;
+}
 
-require_once PLUGIN_DIR . '/includes/functions.php';
-require_once PLUGIN_DIR . '/includes/class-plugin.php';
+define( 'HIHAT_METABOX_ORDERING_DIR', __DIR__ );
+define( 'HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS', 'hihat_enabled_post_types' );
+define( 'HIHAT_METABOX_ORDERING_OPTION_KEY_ORDERS', 'hihat_acf_metabox_order' );
+
+require_once HIHAT_METABOX_ORDERING_DIR . '/includes/functions.php';
+require_once HIHAT_METABOX_ORDERING_DIR . '/includes/class-plugin.php';
 
 /**
  * Initialize the plugin.
  */
 add_action( 'plugins_loaded', function () {
-	Plugin::instance()->init();
+	HihatAcfMetaboxOrdering\Plugin::instance()->init();
 }, 10 );
