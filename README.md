@@ -149,7 +149,93 @@ npm run test
 ./build.sh
 ```
 
-## Credits
+## Releases
+
+### Creating a Release
+
+To create a new release for distribution:
+
+#### 1. Update Version Numbers
+
+Update the version in the plugin files:
+
+```bash
+# Edit the main plugin file
+nano hihat-acf-metabox-ordering.php
+# Update: Version: X.Y.Z
+
+# Edit the readme
+nano readme.txt
+# Update: Stable tag: X.Y.Z
+```
+
+#### 2. Commit and Tag
+
+```bash
+# Commit the version update
+git add .
+git commit -m "Bump version to X.Y.Z"
+git push origin main
+
+# Create a Git tag
+git tag -a vX.Y.Z -m "Version X.Y.Z - Brief description of release"
+
+# Push the tag to GitHub
+git push origin vX.Y.Z
+```
+
+#### 3. Build Distribution
+
+```bash
+# Build the production-ready zip file
+./build.sh
+
+# This creates: dist/hi-hat-acf-metabox-ordering.zip
+```
+
+#### 4. Create GitHub Release
+
+**Option A: Using GitHub CLI** (if installed)
+
+```bash
+gh release create vX.Y.Z \
+  --title "Version X.Y.Z - Release Title" \
+  --notes "Release notes and feature list here" \
+  dist/hi-hat-acf-metabox-ordering.zip
+```
+
+**Option B: Via GitHub Web Interface**
+
+1. Visit: `https://github.com/miketurner/hi-hat-acf-metabox-ordering/releases`
+2. Click **"Create a new release"**
+3. Select tag: `vX.Y.Z`
+4. Add release title and description
+5. Upload the zip file from `dist/` folder
+6. Click **"Publish release"**
+
+#### Example Release Command
+
+```bash
+# Complete release workflow
+git tag -a v1.0.1 -m "Version 1.0.1 - Bug fixes"
+git push origin v1.0.1
+./build.sh
+gh release create v1.0.1 \
+  --title "Version 1.0.1 - Bug Fixes" \
+  --notes "Improved metabox ordering stability and performance" \
+  dist/hi-hat-acf-metabox-ordering.zip
+```
+
+### Semantic Versioning
+
+Releases follow semantic versioning (MAJOR.MINOR.PATCH):
+
+- `v1.0.0` — Initial public release
+- `v1.0.1` — Patch release (bug fixes only)
+- `v1.1.0` — Minor release (new features, backward compatible)
+- `v2.0.0` — Major release (breaking changes)
+
+
 
 **Author:** Mike Turner - [Hi-hat Consulting](https://hi-hatconsulting.com)
 
