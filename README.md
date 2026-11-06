@@ -106,14 +106,15 @@ A: Deactivate the plugin in **Tools → Metabox Ordering** (uncheck all post typ
 
 ### Storage
 - **Settings** - Stored per-site in `wp_options` under key `hihat_enabled_post_types`
-- **Metabox Orders** - Stored per-site in `wp_options` under key `hihat_acf_metabox_order`
+- **Metabox Orders** - Stored per post in post meta under `_hihat_meta-box-order_{post_type}` (e.g. `_hihat_meta-box-order_page` on post 42), so each page or post keeps its own order
+- **Open/Closed Metaboxes** - Stored per post in post meta under `_hihat_closedpostboxes_{post_type}`, shared by all users who can edit that post
 
 ### Multisite
 In multisite networks, each site maintains separate settings and metabox orders. Changes on one site don't affect others.
 
 ### Hooks
 - `update_user_metadata` (priority 10) — Captures metabox order changes when admin rearranges
-- `get_user_metadata` (priority 10) — Retrieves global order for all users instead of per-user preference
+- `get_user_metadata` (priority 10) — Retrieves the saved order for the post being edited, for all users, instead of per-user preference
 
 ## Support
 
@@ -234,7 +235,7 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH):
 
 - `v1.0.0` — Initial public release
 - `v1.0.1` — Patch release (bug fixes only)
-- `v1.1.0` — Minor release (new features, backward compatible)
+- `v1.2.0` — Minor release (new features, backward compatible)
 - `v2.0.0` — Major release (breaking changes)
 
 
@@ -246,6 +247,12 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH):
 **Made with ❤️ for WordPress developers**
 
 ## Changelog
+
+### 1.2.0
+- **Fixed:** Metabox order is now saved for each individual page or post instead of for the whole post type. Reordering boxes on one page no longer overwrites the order saved for another page of the same type
+- Global order is applied only to the post being edited, for all users
+- Metaboxes that are open or closed are now saved per post and shared by all users who can edit that post
+- Orders saved by earlier versions are not used; reorder each page once after updating
 
 ### 1.0.0
 - Initial release
