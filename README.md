@@ -232,7 +232,7 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH):
 
 - `v1.0.0` — Initial public release
 - `v1.0.1` — Patch release (bug fixes only)
-- `v1.1.0` — Minor release (new features, backward compatible)
+- `v1.2.0` — Minor release (new features, backward compatible)
 - `v2.0.0` — Major release (breaking changes)
 
 
@@ -244,6 +244,11 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH):
 **Made with ❤️ for WordPress developers**
 
 ## Changelog
+
+### 1.2.0
+- **Fixed:** Metabox order is now saved for each individual page or post instead of for the whole post type. Reordering boxes on one page no longer overwrites the order saved for another page of the same type
+- Global order is applied only to the post being edited, for all users
+- Orders saved by earlier versions are not used; reorder each page once after updating
 
 ### 1.0.0
 - Initial release

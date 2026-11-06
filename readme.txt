@@ -89,6 +89,11 @@ Deactivate the plugin in **Tools → Metabox Ordering** (uncheck all post types)
 
 == Changelog ==
 
+= 1.2.0 =
+* Fixed: Metabox order is now saved for each individual page or post instead of for the whole post type. Reordering boxes on one page no longer overwrites the order saved for another page of the same type.
+* Global order is applied only to the post being edited, for all users.
+* Orders saved by earlier versions are not used; reorder each page once after updating.
+
 = 1.0.0 =
 * Initial release
 * Automatic capture of admin metabox ordering
