@@ -27,46 +27,43 @@ class Metabox_Order_Handler {
 	 * @param string $meta_key The meta key.
 	 * @param mixed  $meta_value The meta value.
 	 * @param mixed  $prev_value The previous value.
-	 * @return null Must return null to allow WordPress to continue normally.
+	 * @return null|bool Null to let WordPress save user meta normally, or true once the value is stored per post.
 	 */
 	public function intercept_metabox_order_save( $null, $user_id, $meta_key, $meta_value, $prev_value ) {
-		// Only intercept metabox order keys.
-		if ( strpos( $meta_key, 'meta-box-order_' ) !== 0 ) {
+		file_put_contents( __DIR__ . '/../hihat-debug.log', date( 'H:i:s' ) . ' ANY-SAVE key=' . $meta_key . ' user=' . $user_id . ' ajax=' . ( wp_doing_ajax() ? 1 : 0 ) . ' action=' . ( $_REQUEST['action'] ?? '' ) . "\n", FILE_APPEND ); // TEMP
+		$parsed = $this->parse_meta_key( $meta_key );
+		if ( ! $parsed ) {
 			return $null;
 		}
 
-		// Only admins can set the global order.
-		// Check the user being updated, not the current user.
-		$user = get_userdata( $user_id );
-		if ( ! $user || ! user_can( $user_id, 'manage_options' ) ) {
-			return $null;
-		}
+		list( $type, $post_type ) = $parsed;
 
-		// Extract post type from meta key (e.g., 'meta-box-order_page' -> 'page').
-		$post_type = str_replace( 'meta-box-order_', '', $meta_key );
-
-		// Check if this post type has ordering enabled in settings.
 		if ( ! is_post_type_enabled( $post_type ) ) {
 			return $null;
 		}
 
-		// The order is saved per post, so the edit screen's post ID is required.
+		// The state is saved per post, so the edit screen's post ID is required.
 		$post_id = $this->get_post_id_from_referer();
 		if ( ! $post_id || get_post_type( $post_id ) !== $post_type ) {
 			return $null;
 		}
 
-		$global_order = get_option( OPTION_KEY_ORDERS, [] );
-		if ( ! is_array( $global_order ) ) {
-			$global_order = [];
+		// Only admins can set the global order. Any user who can edit the post
+		// can set the shared open/closed state.
+		$allowed = 'order' === $type
+			? user_can( $user_id, 'manage_options' )
+			: user_can( $user_id, 'edit_post', $post_id );
+
+		if ( ! $allowed ) {
+			return $null;
 		}
 
-		$global_order[ $this->get_order_key( $meta_key, $post_id ) ] = $meta_value;
+		update_post_meta( $post_id, $this->get_storage_key( $meta_key ), $meta_value );
+		file_put_contents( __DIR__ . '/../hihat-debug.log', date( 'H:i:s' ) . ' SAVE post=' . $post_id . ' key=' . $meta_key . ' value=' . wp_json_encode( $meta_value ) . "\n", FILE_APPEND ); // TEMP
 
-		update_option( OPTION_KEY_ORDERS, $global_order );
-
-		// Must return $null to allow WordPress to continue normally.
-		return $null;
+		// A non-null return stops WordPress from also writing the shared user meta,
+		// which would otherwise be read back by posts without their own saved state.
+		return true;
 	}
 
 	/**
@@ -88,33 +85,27 @@ class Metabox_Order_Handler {
 	 * @return mixed|null The global metabox order or null to continue normally.
 	 */
 	public function override_metabox_order_retrieval( $null, $object_id, $meta_key, $single, $meta_type ) {
-		// Only override metabox order keys.
-		if ( strpos( $meta_key, 'meta-box-order_' ) !== 0 ) {
+		$parsed = $this->parse_meta_key( $meta_key );
+		if ( ! $parsed ) {
 			return null;
 		}
 
-		// Extract post type from meta key (e.g., 'meta-box-order_page' -> 'page').
-		$post_type = str_replace( 'meta-box-order_', '', $meta_key );
+		list( , $post_type ) = $parsed;
 
-		// Check if this post type has ordering enabled in settings.
 		if ( ! is_post_type_enabled( $post_type ) ) {
 			return null;
 		}
 
-		// Only the post currently being edited can have a saved order.
+		// Only the post currently being edited can have saved state.
 		$post = $GLOBALS['post'] ?? null;
 		if ( ! $post instanceof \WP_Post || $post->post_type !== $post_type ) {
 			return null;
 		}
 
-		$global_order = get_option( OPTION_KEY_ORDERS, [] );
-		if ( empty( $global_order ) || ! is_array( $global_order ) ) {
-			return null;
-		}
-
-		$order_key = $this->get_order_key( $meta_key, $post->ID );
-		if ( isset( $global_order[ $order_key ] ) ) {
-			$order_value = $global_order[ $order_key ];
+		$storage_key = $this->get_storage_key( $meta_key );
+		file_put_contents( __DIR__ . '/../hihat-debug.log', date( 'H:i:s' ) . ' READ post=' . $post->ID . ' key=' . $meta_key . ' exists=' . (int) metadata_exists( 'post', $post->ID, $storage_key ) . "\n", FILE_APPEND ); // TEMP
+		if ( metadata_exists( 'post', $post->ID, $storage_key ) ) {
+			$order_value = get_post_meta( $post->ID, $storage_key, true );
 
 			// WordPress expects an array when $single is true (it will extract [0]).
 			if ( $single ) {
@@ -128,14 +119,34 @@ class Metabox_Order_Handler {
 	}
 
 	/**
-	 * Build the option array key for a metabox order on a single post.
+	 * Split a managed user meta key into its type and post type.
 	 *
-	 * @param string $meta_key The meta key, e.g. 'meta-box-order_page'.
-	 * @param int    $post_id  The post ID.
+	 * @param string $meta_key The meta key, e.g. 'meta-box-order_page' or 'closedpostboxes_page'.
+	 * @return array|null [ 'order' or 'closed', post type ], or null if the key isn't managed.
+	 */
+	private function parse_meta_key( $meta_key ) {
+		$prefixes = [
+			'order'  => 'meta-box-order_',
+			'closed' => 'closedpostboxes_',
+		];
+
+		foreach ( $prefixes as $type => $prefix ) {
+			if ( strpos( $meta_key, $prefix ) === 0 ) {
+				return [ $type, substr( $meta_key, strlen( $prefix ) ) ];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Build the post meta key that stores saved state for a post.
+	 *
+	 * @param string $meta_key The user meta key, e.g. 'meta-box-order_page'.
 	 * @return string
 	 */
-	private function get_order_key( $meta_key, $post_id ) {
-		return $meta_key . '_' . absint( $post_id );
+	private function get_storage_key( $meta_key ) {
+		return '_hihat_' . $meta_key;
 	}
 
 	/**
