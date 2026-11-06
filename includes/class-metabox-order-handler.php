@@ -50,16 +50,19 @@ class Metabox_Order_Handler {
 			return $null;
 		}
 
-		// Get the current global order (per-site in multisite, global in single site).
+		// The order is saved per post, so the edit screen's post ID is required.
+		$post_id = $this->get_post_id_from_referer();
+		if ( ! $post_id || get_post_type( $post_id ) !== $post_type ) {
+			return $null;
+		}
+
 		$global_order = get_option( OPTION_KEY_ORDERS, [] );
 		if ( ! is_array( $global_order ) ) {
 			$global_order = [];
 		}
 
-		// Update the global order with the new value for this page/context.
-		$global_order[ $meta_key ] = $meta_value;
+		$global_order[ $this->get_order_key( $meta_key, $post_id ) ] = $meta_value;
 
-		// Save the updated global order (per-site in multisite, global in single site).
 		update_option( OPTION_KEY_ORDERS, $global_order );
 
 		// Must return $null to allow WordPress to continue normally.
@@ -98,29 +101,65 @@ class Metabox_Order_Handler {
 			return null;
 		}
 
-		// Get the globally stored metabox order (per-site in multisite, global in single site).
-		$global_order = get_option( OPTION_KEY_ORDERS, [] );
+		// Only the post currently being edited can have a saved order.
+		$post = $GLOBALS['post'] ?? null;
+		if ( ! $post instanceof \WP_Post || $post->post_type !== $post_type ) {
+			return null;
+		}
 
-		// If no global order exists, return null to let WordPress continue.
+		$global_order = get_option( OPTION_KEY_ORDERS, [] );
 		if ( empty( $global_order ) || ! is_array( $global_order ) ) {
 			return null;
 		}
 
-		// If we have a stored order for this specific metabox key, return it.
-		if ( isset( $global_order[ $meta_key ] ) ) {
-			$order_value = $global_order[ $meta_key ];
-			
-			// WordPress expects an array when $single is true (it will extract [0])
-			// Return the value as an array to match WordPress's expected format
+		$order_key = $this->get_order_key( $meta_key, $post->ID );
+		if ( isset( $global_order[ $order_key ] ) ) {
+			$order_value = $global_order[ $order_key ];
+
+			// WordPress expects an array when $single is true (it will extract [0]).
 			if ( $single ) {
 				return [ $order_value ];
 			}
-			
+
 			return $order_value;
 		}
 
-		// Otherwise return null to let WordPress continue normally.
 		return null;
+	}
+
+	/**
+	 * Build the option array key for a metabox order on a single post.
+	 *
+	 * @param string $meta_key The meta key, e.g. 'meta-box-order_page'.
+	 * @param int    $post_id  The post ID.
+	 * @return string
+	 */
+	private function get_order_key( $meta_key, $post_id ) {
+		return $meta_key . '_' . absint( $post_id );
+	}
+
+	/**
+	 * Read the post ID of the edit screen that sent the request.
+	 *
+	 * The metabox ordering AJAX request has no post ID, but the browser sends
+	 * the edit URL (post.php?post=ID&action=edit) as the referer.
+	 *
+	 * @return int The post ID, or 0 if it can't be determined.
+	 */
+	private function get_post_id_from_referer() {
+		$referer = wp_get_referer();
+		if ( ! $referer ) {
+			return 0;
+		}
+
+		$query = wp_parse_url( $referer, PHP_URL_QUERY );
+		if ( ! $query ) {
+			return 0;
+		}
+
+		parse_str( $query, $args );
+
+		return isset( $args['post'] ) ? absint( $args['post'] ) : 0;
 	}
 }
 

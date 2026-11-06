@@ -104,14 +104,14 @@ A: Deactivate the plugin in **Tools → Metabox Ordering** (uncheck all post typ
 
 ### Storage
 - **Settings** - Stored per-site in `wp_options` under key `hihat_enabled_post_types`
-- **Metabox Orders** - Stored per-site in `wp_options` under key `hihat_acf_metabox_order`
+- **Metabox Orders** - Stored per-site in `wp_options` under key `hihat_acf_metabox_order`, one entry per post (e.g. `meta-box-order_page_42`), so each page or post keeps its own order
 
 ### Multisite
 In multisite networks, each site maintains separate settings and metabox orders. Changes on one site don't affect others.
 
 ### Hooks
 - `update_user_metadata` (priority 10) — Captures metabox order changes when admin rearranges
-- `get_user_metadata` (priority 10) — Retrieves global order for all users instead of per-user preference
+- `get_user_metadata` (priority 10) — Retrieves the saved order for the post being edited, for all users, instead of per-user preference
 
 ## Support
 
