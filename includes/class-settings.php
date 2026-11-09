@@ -42,6 +42,15 @@ class Settings {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$on_settings_page = isset( $_GET['page'] ) && 'hihat-metabox-ordering' === sanitize_key( $_GET['page'] );
+
+		// Admin notices render before the settings page callback, so clear the flag here.
+		if ( $on_settings_page ) {
+			delete_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED );
+			return;
+		}
+
 		$disabled = array_diff( $this->get_post_types(), get_enabled_post_types() );
 
 		if ( empty( $disabled ) ) {
@@ -248,9 +257,6 @@ class Settings {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'hi-hat-acf-metabox-ordering' ) );
 		}
-
-		// The settings page has been reached, so the activation prompt is no longer needed.
-		delete_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED );
 
 		// Get banner image URL
 		$banner_url = plugins_url( 'assets/banner-772x250.png', HIHAT_METABOX_ORDERING_DIR . '/hihat-acf-metabox-ordering.php' );
