@@ -52,6 +52,12 @@ if ( ! class_exists( 'acf' ) ) {
 define( 'HIHAT_METABOX_ORDERING_DIR', __DIR__ );
 define( 'HIHAT_METABOX_ORDERING_OPTION_KEY_SETTINGS', 'hihat_enabled_post_types' );
 define( 'HIHAT_METABOX_ORDERING_OPTION_KEY_ORDERS', 'hihat_acf_metabox_order' );
+define( 'HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED', 'hihat_show_activation_notice' );
+
+// Flag the site so an admin notice prompts the user to enable ordering per post type.
+register_activation_hook( __FILE__, function () {
+	update_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED, 1 );
+} );
 
 require_once HIHAT_METABOX_ORDERING_DIR . '/includes/functions.php';
 require_once HIHAT_METABOX_ORDERING_DIR . '/includes/class-plugin.php';

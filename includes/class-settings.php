@@ -29,6 +29,44 @@ class Settings {
 		add_action( 'admin_menu', [ $this, 'register_menu' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
 		add_action( 'admin_notices', [ $this, 'display_notices' ] );
+		add_action( 'admin_notices', [ $this, 'display_activation_notice' ] );
+	}
+
+	/**
+	 * Display a post-activation notice listing post types that still need ordering enabled.
+	 *
+	 * @return void
+	 */
+	public function display_activation_notice() {
+		if ( ! get_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED ) || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$disabled = array_diff( $this->get_post_types(), get_enabled_post_types() );
+
+		if ( empty( $disabled ) ) {
+			delete_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED );
+			return;
+		}
+
+		$settings_url = admin_url( 'tools.php?page=hihat-metabox-ordering' );
+		?>
+		<div class="notice notice-info is-dismissible">
+			<p>
+				<?php esc_html_e( 'Hi-hat ACF Metabox Ordering is active. To apply a global metabox order, enable ordering for each post type you want to manage:', 'hi-hat-acf-metabox-ordering' ); ?>
+			</p>
+			<ul style="list-style: disc; margin-left: 20px;">
+				<?php foreach ( $disabled as $post_type ) : ?>
+					<li><?php echo esc_html( $this->get_post_type_label( $post_type ) ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+			<p>
+				<a class="button button-primary" href="<?php echo esc_url( $settings_url ); ?>">
+					<?php esc_html_e( 'Go to Metabox Ordering settings', 'hi-hat-acf-metabox-ordering' ); ?>
+				</a>
+			</p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -210,6 +248,9 @@ class Settings {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'hi-hat-acf-metabox-ordering' ) );
 		}
+
+		// The settings page has been reached, so the activation prompt is no longer needed.
+		delete_option( HIHAT_METABOX_ORDERING_OPTION_KEY_ACTIVATED );
 
 		// Get banner image URL
 		$banner_url = plugins_url( 'assets/banner-772x250.png', HIHAT_METABOX_ORDERING_DIR . '/hihat-acf-metabox-ordering.php' );
